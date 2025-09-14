@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { MessageCircle, Bell, Settings, LogOut, Plus } from 'lucide-react'
+import { MessageCircle, Bell, Settings, LogOut, Plus, Smile } from 'lucide-react'
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
 interface User {
   id: string
@@ -47,6 +48,7 @@ const Home: NextPage = () => {
   const [loginData, setLoginData] = useState({ username: '', password: '' })
   const [registerData, setRegisterData] = useState({ username: '', email: '', password: '' })
   const [isRegistering, setIsRegistering] = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
 
   const router = useRouter()
 
@@ -184,105 +186,110 @@ const Home: NextPage = () => {
     }
   }
 
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+    setNewMessage(prev => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+  };
+
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="bg-gray-800 p-8 rounded-lg w-96">
-          <h1 className="text-3xl font-bold text-white mb-8 text-center">Limecord</h1>
+      <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center">
+        <div className="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
+          <h1 className="text-5xl font-bold text-lime mb-8 text-center">Limecord</h1>
           
           {!isRegistering ? (
-            <form onSubmit={login} className="space-y-4">
+            <form onSubmit={login} className="space-y-6">
               <div>
-                <label className="block text-gray-300 text-sm font-bold mb-2">
+                <label className="block text-gray-400 text-sm font-bold mb-2">
                   Username or Email
                 </label>
                 <input
                   type="text"
                   value={loginData.username}
                   onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime"
                   required
                 />
               </div>
               <div>
-                <label className="block text-gray-300 text-sm font-bold mb-2">
+                <label className="block text-gray-400 text-sm font-bold mb-2">
                   Password
                 </label>
                 <input
                   type="password"
                   value={loginData.password}
                   onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                className="w-full bg-lime hover:bg-lime-600 text-gray-900 font-bold py-3 px-4 rounded-lg transition duration-300"
               >
                 Login
               </button>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-gray-400">
                 Don't have an account?{' '}
                 <button
                   type="button"
                   onClick={() => setIsRegistering(true)}
-                  className="text-green-400 hover:text-green-300"
+                  className="font-bold text-lime hover:text-lime-400"
                 >
                   Register
                 </button>
               </p>
             </form>
           ) : (
-            <form onSubmit={register} className="space-y-4">
+            <form onSubmit={register} className="space-y-6">
               <div>
-                <label className="block text-gray-300 text-sm font-bold mb-2">
+                <label className="block text-gray-400 text-sm font-bold mb-2">
                   Username
                 </label>
                 <input
                   type="text"
                   value={registerData.username}
                   onChange={(e) => setRegisterData({ ...registerData, username: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime"
                   required
                 />
               </div>
               <div>
-                <label className="block text-gray-300 text-sm font-bold mb-2">
+                <label className="block text-gray-400 text-sm font-bold mb-2">
                   Email
                 </label>
                 <input
                   type="email"
                   value={registerData.email}
                   onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime"
                   required
                 />
               </div>
               <div>
-                <label className="block text-gray-300 text-sm font-bold mb-2">
+                <label className="block text-gray-400 text-sm font-bold mb-2">
                   Password
                 </label>
                 <input
                   type="password"
                   value={registerData.password}
                   onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                className="w-full bg-lime hover:bg-lime-600 text-gray-900 font-bold py-3 px-4 rounded-lg transition duration-300"
               >
                 Register
               </button>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-gray-400">
                 Already have an account?{' '}
                 <button
                   type="button"
                   onClick={() => setIsRegistering(false)}
-                  className="text-green-400 hover:text-green-300"
+                  className="font-bold text-lime hover:text-lime-400"
                 >
                   Login
                 </button>
@@ -297,27 +304,27 @@ const Home: NextPage = () => {
   return (
     <div className="h-screen bg-gray-900 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 flex flex-col">
+      <div className="w-64 bg-gray-800 flex flex-col border-r border-gray-700">
         {/* Server Info */}
         <div className="p-4 border-b border-gray-700">
-          <h2 className="text-white font-bold text-lg">Limecord</h2>
+          <h2 className="text-lime font-extrabold text-xl">Limecord</h2>
         </div>
 
         {/* Channels */}
-        <div className="flex-1 p-4">
-          <div className="flex items-center justify-between mb-4">
+        <div className="flex-1 p-4 space-y-4">
+          <div className="flex items-center justify-between">
             <h3 className="text-gray-400 text-sm font-semibold uppercase">Channels</h3>
-            <Plus className="w-4 h-4 text-gray-400 cursor-pointer hover:text-white" />
+            <Plus className="w-4 h-4 text-gray-400 cursor-pointer hover:text-lime" />
           </div>
           <div className="space-y-1">
             {channels.map((channel) => (
               <button
                 key={channel.id}
                 onClick={() => setSelectedChannel(channel.id)}
-                className={`w-full text-left px-3 py-2 rounded text-sm flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center transition duration-200 ${
                   selectedChannel === channel.id
-                    ? 'bg-gray-700 text-white'
-                    : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                    ? 'bg-lime text-gray-900 font-bold'
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-lime'
                 }`}
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
@@ -331,23 +338,23 @@ const Home: NextPage = () => {
         <div className="p-4 border-t border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-bold">
+              <div className="w-8 h-8 bg-lime rounded-full flex items-center justify-center">
+                <span className="text-gray-900 text-sm font-bold">
                   {user?.username?.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="ml-3">
-                <p className="text-white text-sm font-medium">{user?.username}</p>
+                <p className="text-gray-300 text-sm font-medium">{user?.username}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <Bell 
-                className="w-5 h-5 text-gray-400 cursor-pointer hover:text-white"
+                className="w-5 h-5 text-gray-400 cursor-pointer hover:text-lime"
                 onClick={() => setShowNotifications(!showNotifications)}
               />
-              <Settings className="w-5 h-5 text-gray-400 cursor-pointer hover:text-white" />
+              <Settings className="w-5 h-5 text-gray-400 cursor-pointer hover:text-lime" />
               <LogOut 
-                className="w-5 h-5 text-gray-400 cursor-pointer hover:text-white"
+                className="w-5 h-5 text-gray-400 cursor-pointer hover:text-lime"
                 onClick={logout}
               />
             </div>
@@ -356,28 +363,28 @@ const Home: NextPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col bg-gray-900">
         {/* Channel Header */}
-        <div className="h-16 bg-gray-800 border-b border-gray-700 flex items-center px-6">
+        <div className="h-16 bg-gray-800 border-b-2 border-gray-700 flex items-center px-6 shadow-md">
           <MessageCircle className="w-5 h-5 text-gray-400 mr-2" />
-          <h1 className="text-white font-semibold">
+          <h1 className="text-gray-300 font-semibold">
             #{channels.find(c => c.id === selectedChannel)?.name}
           </h1>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {messages.map((message) => (
-            <div key={message.id} className="flex">
-              <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center mr-4">
-                <span className="text-white text-sm font-bold">
+            <div key={message.id} className="flex items-start">
+              <div className="w-10 h-10 bg-lime rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                <span className="text-gray-900 text-sm font-bold">
                   {message.username.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-1">
-                  <span className="text-white font-medium">{message.username}</span>
-                  <span className="text-gray-400 text-sm">
+                <div className="flex items-baseline space-x-2 mb-1">
+                  <span className="text-lime font-bold">{message.username}</span>
+                  <span className="text-gray-400 text-xs">
                     {new Date(message.created_at).toLocaleString()}
                   </span>
                 </div>
@@ -388,18 +395,30 @@ const Home: NextPage = () => {
         </div>
 
         {/* Message Input */}
-        <div className="p-6 border-t border-gray-700">
-          <form onSubmit={sendMessage} className="flex">
+        <div className="p-4 bg-gray-800 border-t-2 border-gray-700 relative">
+          {showEmojiPicker && (
+            <div className="absolute bottom-20">
+              <EmojiPicker onEmojiClick={onEmojiClick} theme="dark" />
+            </div>
+          )}
+          <form onSubmit={sendMessage} className="flex items-center">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder={`Message #${channels.find(c => c.id === selectedChannel)?.name}`}
-              className="flex-1 bg-gray-700 text-white px-4 py-2 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="flex-1 bg-gray-700 text-gray-300 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lime"
             />
             <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="p-2 bg-gray-700 hover:bg-gray-600"
+            >
+              <Smile className="text-gray-400 hover:text-lime" />
+            </button>
+            <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-r"
+              className="bg-lime hover:bg-lime-600 text-gray-900 font-bold px-6 py-2 rounded-r-lg transition duration-300"
             >
               Send
             </button>
@@ -409,23 +428,25 @@ const Home: NextPage = () => {
 
       {/* Notifications Panel */}
       {showNotifications && (
-        <div className="w-80 bg-gray-800 border-l border-gray-700 flex flex-col">
-          <div className="p-4 border-b border-gray-700">
-            <h3 className="text-white font-semibold">Notifications</h3>
+        <div className="w-80 bg-gray-800 border-l-2 border-gray-700 flex flex-col">
+          <div className="p-4 border-b-2 border-gray-700">
+            <h3 className="text-gray-300 font-semibold">Notifications</h3>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {notifications.length === 0 ? (
-              <p className="text-gray-400 text-center">No notifications</p>
+              <p className="text-gray-400 text-center">No new notifications</p>
             ) : (
               notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-3 rounded cursor-pointer ${
-                    notification.read ? 'bg-gray-700' : 'bg-green-900'
+                  className={`p-3 rounded-lg cursor-pointer border transition-colors duration-200 ${
+                    notification.read
+                      ? 'bg-gray-700 border-transparent'
+                      : 'bg-lime-900 border-lime hover:bg-lime-800'
                   }`}
                   onClick={() => markNotificationAsRead(notification.id)}
                 >
-                  <h4 className="text-white font-medium">{notification.title}</h4>
+                  <h4 className={`font-medium ${notification.read ? 'text-gray-300' : 'text-lime'}`}>{notification.title}</h4>
                   <p className="text-gray-300 text-sm">{notification.message}</p>
                   <p className="text-gray-400 text-xs mt-1">
                     {new Date(notification.created_at).toLocaleString()}
